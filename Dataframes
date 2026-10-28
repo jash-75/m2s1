@@ -1,0 +1,1217 @@
+<!DOCTYPE html>
+<html lang="es-MX">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Ciencia de Datos · 2.º parcial · M2S1 y M2S2</title>
+<style>
+:root{
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+  --bg:#f7f8fb; --card:#ffffff; --tx:#1d2330; --mut:#596477; --bd:#dfe4ec;
+  --ac:#1f5fd6; --acx:#ffffff; --ok:#15803d; --okbg:#e7f6ec; --bad:#b42318; --badbg:#fdecea;
+  --warn:#8a5a00; --warnbg:#fff6df; --code:#0f172a; --codet:#e2e8f0; --chip:#eef3fc;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#0f141c; --card:#171e29; --tx:#e7ecf3; --mut:#9aa6b8; --bd:#2a3445;
+    --ac:#7aa7ff; --acx:#0b1220; --ok:#4ade80; --okbg:#143222; --bad:#ff8a80; --badbg:#3a1a18;
+    --warn:#fcd34d; --warnbg:#2e260f; --code:#0a0e14; --codet:#dbe4ee; --chip:#1d2838;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0f141c; --card:#171e29; --tx:#e7ecf3; --mut:#9aa6b8; --bd:#2a3445;
+  --ac:#7aa7ff; --acx:#0b1220; --ok:#4ade80; --okbg:#143222; --bad:#ff8a80; --badbg:#3a1a18;
+  --warn:#fcd34d; --warnbg:#2e260f; --code:#0a0e14; --codet:#dbe4ee; --chip:#1d2838;
+}
+*{box-sizing:border-box}
+html{scroll-padding-top:120px;scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--tx);font:19px/1.6 system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif}
+header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:10;background:var(--card);border-bottom:1px solid var(--bd)}
+.brand{padding:12px 16px 4px;font-weight:700;font-size:1.05rem;display:flex;justify-content:space-between;gap:8px;align-items:center}
+.brand small{color:var(--mut);font-weight:500;font-size:.85rem}
+nav#nav{display:flex;gap:8px;overflow-x:auto;padding:8px 16px 10px;scrollbar-width:thin}
+nav#nav a{flex:0 0 auto;text-decoration:none;color:var(--tx);background:var(--chip);border:1px solid var(--bd);border-radius:999px;padding:6px 12px;font-size:.92rem;white-space:nowrap}
+nav#nav a.on{background:var(--ac);color:var(--acx);border-color:var(--ac);font-weight:700}
+nav#nav a.done::before{content:"✓ ";color:var(--ok);font-weight:700}
+nav#nav a.on.done::before{color:var(--acx)}
+.prog{height:6px;background:var(--bd)}
+.prog i{display:block;height:100%;width:0;background:var(--ac);transition:width .3s}
+main{max-width:760px;margin:0 auto;padding:18px 16px 60px}
+.sec{display:none;animation:fade .25s ease}
+.sec.on{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.kicker{color:var(--ac);font-weight:700;font-size:.9rem;letter-spacing:.04em;text-transform:uppercase;margin:0}
+h1{font-size:1.9rem;line-height:1.2;margin:4px 0 10px}
+h2{font-size:1.4rem;margin:26px 0 8px;line-height:1.25}
+h3{font-size:1.1rem;margin:18px 0 6px}
+p{margin:10px 0}
+ul,ol{padding-left:22px;margin:8px 0}
+li{margin:6px 0}
+.lead{font-size:1.12rem;color:var(--mut)}
+.box{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:16px 18px;margin:16px 0}
+.box h3{margin-top:0}
+.tip{background:var(--okbg);border-left:5px solid var(--ok);border-radius:10px;padding:12px 14px;margin:14px 0}
+.warn{background:var(--warnbg);border-left:5px solid var(--warn);border-radius:10px;padding:12px 14px;margin:14px 0}
+.colab{background:var(--chip);border:1px dashed var(--ac);border-radius:12px;padding:12px 14px;margin:16px 0}
+.colab b{color:var(--ac)}
+.tag{display:inline-block;font-size:.8rem;font-weight:700;padding:2px 9px;border-radius:999px;background:var(--ac);color:var(--acx);margin-right:6px}
+table{border-collapse:collapse;width:100%;margin:12px 0;font-size:.95rem}
+th,td{border:1px solid var(--bd);padding:8px 10px;text-align:left;vertical-align:top}
+th{background:var(--chip)}
+.scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;border-radius:10px}
+table.df td,table.df th{text-align:center;white-space:nowrap}
+table.df td.idx,table.df th.idx{background:var(--chip);color:var(--mut)}
+table.df td.cell{cursor:pointer}
+table.df td.cell:hover,table.df th.colh:hover{outline:2px solid var(--ac);outline-offset:-2px}
+table.df th.colh{cursor:pointer;background:var(--chip)}
+.explain{min-height:64px;background:var(--chip);border-radius:12px;padding:12px 14px;margin:12px 0;border:1px solid var(--bd)}
+.btns{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+button{font:inherit;cursor:pointer;border-radius:10px;border:1px solid var(--bd);background:var(--card);color:var(--tx);padding:10px 14px;min-height:44px}
+button.p{background:var(--ac);color:var(--acx);border-color:var(--ac);font-weight:700}
+button.ghost{background:transparent}
+button:disabled{opacity:.45;cursor:not-allowed}
+select,textarea,input[type=text]{font:inherit;padding:10px;border:1px solid var(--bd);border-radius:10px;background:var(--card);color:var(--tx);min-height:44px;max-width:100%}
+textarea{width:100%;min-height:120px;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.95rem}
+input[type=text]{width:100%}
+pre{background:var(--code);color:var(--codet);padding:12px 14px;border-radius:10px;overflow-x:auto;font:.9rem/1.5 ui-monospace,Menlo,Consolas,monospace;margin:10px 0;white-space:pre}
+code{font-family:ui-monospace,Menlo,Consolas,monospace;background:var(--chip);padding:1px 6px;border-radius:6px;font-size:.92em}
+.cards{display:grid;grid-template-columns:1fr;gap:10px}
+@media(min-width:620px){.cards{grid-template-columns:1fr 1fr}}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:12px 14px}
+.card .frase{margin:0 0 8px}
+.res{font-weight:700;margin-top:6px}
+.ok{color:var(--ok)} .bad{color:var(--bad)}
+.q{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:14px;margin:12px 0}
+.q p{margin:0 0 8px;font-weight:600}
+.q label{display:flex;gap:10px;align-items:flex-start;padding:8px 6px;border-radius:8px;cursor:pointer}
+.q label:hover{background:var(--chip)}
+.q input{margin-top:6px;transform:scale(1.25)}
+.fb{margin-top:8px;padding:10px 12px;border-radius:8px;font-size:.98rem}
+.fb.ok{background:var(--okbg)} .fb.bad{background:var(--badbg)}
+.score{font-weight:700;font-size:1.05rem;margin:10px 0}
+.nextprev{display:flex;justify-content:space-between;gap:10px;margin-top:30px;border-top:1px solid var(--bd);padding-top:18px}
+.nextprev button{flex:1}
+.focus{position:fixed;right:12px;bottom:12px;z-index:20;background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:10px 12px;box-shadow:0 6px 20px rgba(0,0,0,.12);font-size:.95rem;display:none;min-width:200px}
+.focus.on{display:block}
+.focus .t{font-size:1.5rem;font-weight:800;font-variant-numeric:tabular-nums;text-align:center}
+footer{color:var(--mut);font-size:.88rem;margin-top:40px;border-top:1px solid var(--bd);padding-top:14px}
+.pyr{display:flex;flex-direction:column;align-items:center;gap:6px;margin:14px 0}
+.pyr div{border-radius:10px;padding:10px 12px;text-align:center;width:100%;max-width:520px;color:#fff;font-weight:700}
+.pyr .c{background:#2a6f4e}.pyr .i{background:#3f6fbf}.pyr .d{background:#8a5a1b}
+.flow{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:10px 0}
+.flow span{background:var(--chip);border:1px solid var(--bd);padding:6px 10px;border-radius:10px;font-size:.95rem}
+.flow b{color:var(--ac)}
+.sq{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px;min-height:44px;padding:8px;border:1px dashed var(--bd);border-radius:10px}
+.sq .ph{background:var(--ac);color:var(--acx);border-radius:8px;padding:6px 10px;font-weight:600}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="brand">
+    <span>Ciencia de Datos · 2.º parcial</span>
+    <small id="pct">0 % completado</small>
+  </div>
+  <nav id="nav" aria-label="Secciones"></nav>
+  <div class="prog"><i id="bar"></i></div>
+</header>
+
+<main>
+
+<!-- ============================ INICIO ============================ -->
+<section class="sec" id="inicio" data-title="Inicio">
+  <p class="kicker">Módulo II · M2S1 y M2S2</p>
+  <h1>Datasets y DataFrames: cómo conocer lo que tienes antes de analizarlo</h1>
+  <p class="lead">Esta página es tu guía de teoría para el 2.º parcial. Cada sección tiene un <b>apunte</b> corto, una <b>simulación</b> para practicar, un <b>ejemplo</b> y una <b>autoevaluación</b>. La idea es leer poco, probar mucho y después ir a Colab.</p>
+
+  <div class="box">
+    <h3>Tu ruta</h3>
+    <ol>
+      <li>Programación tradicional vs. Machine Learning</li>
+      <li>Ciclo de vida de los datos (CRISP-DM)</li>
+      <li>Entorno de trabajo: Jupyter vs. Google Colab</li>
+      <li>Del dato al conocimiento</li>
+      <li>Dataset y DataFrame: filas, columnas, valores e índice</li>
+      <li>Crear un DataFrame desde un diccionario</li>
+      <li>Tipos de variables</li>
+      <li>Inspeccionar un DataFrame</li>
+      <li>Del código a la interpretación</li>
+      <li>Texto como dato: cadenas</li>
+      <li>Expresiones regulares (REGEX)</li>
+      <li>Práctica integradora: reseñas de clientes</li>
+    </ol>
+  </div>
+
+  <div class="box">
+    <h3>Cómo estudiar sin distraerte</h3>
+    <ul>
+      <li>Trabaja una sección a la vez y termina su autoevaluación antes de seguir.</li>
+      <li>Usa el <b>modo enfoque</b> (abajo a la derecha): 25 minutos de trabajo y 5 de pausa.</li>
+      <li>Si una simulación no te queda clara, cambia un valor y observa qué pasa. Aprender aquí es experimentar.</li>
+      <li>Antes de programar en Colab, escribe en papel qué quieres obtener.</li>
+    </ul>
+  </div>
+
+  <div class="tip"><b>Dato importante:</b> la mayoría de los datos de los ejemplos vienen de dos fuentes del curso: el libro <i>Ciencia de Datos con Python</i> (Tomo 1, capítulos 1 y 2) y el plan de clase del 2.º parcial. Los datos de las simulaciones son pequeños y ficticios, para que puedas verlos completos en pantalla.</div>
+
+  <div class="box" id="enfoque">
+    <h3>Modo enfoque</h3>
+    <p class="mut" style="color:var(--mut)">Pon el temporizador, cierra otras pestañas y no busques música mientras practicas.</p>
+    <div class="btns">
+      <button class="p" id="focusBtn">Iniciar 25 min</button>
+      <button id="focusReset">Reiniciar</button>
+    </div>
+    <div class="t" id="focusTime" style="font-size:2rem;font-weight:800;font-variant-numeric:tabular-nums">25:00</div>
+  </div>
+
+  <div class="nextprev"><span></span><button class="p" data-go="next">Empezar →</button></div>
+</section>
+
+<!-- ============================ S1 ============================ -->
+<section class="sec" id="s1" data-title="Tradicional vs ML">
+  <p class="kicker">Sección 1 · M2S1</p>
+  <h1>Programación tradicional vs. Machine Learning</h1>
+  <p class="lead">La diferencia está en qué le entregas a la computadora y qué te devuelve.</p>
+
+  <h2>Apunte</h2>
+  <p>En la <b>programación tradicional</b>, la persona escribe las reglas de forma explícita (con <code>if</code> y <code>else</code>) y las combina con los datos de entrada para obtener respuestas.</p>
+  <p>En <b>Machine Learning (ML)</b>, el enfoque se invierte: el sistema recibe los <b>datos de entrada</b> y las <b>respuestas deseadas</b>, y aprende por sí mismo los patrones o reglas que las conectan. Como resultado obtienes un <b>modelo entrenado</b>.</p>
+
+  <div class="scroll"><table>
+    <tr><th>Aspecto</th><th>Programación tradicional</th><th>Machine Learning</th></tr>
+    <tr><td>Entradas</td><td>Reglas explícitas + datos de entrada</td><td>Datos de entrada + respuestas deseadas (Y)</td></tr>
+    <tr><td>Salida</td><td>Resultados o respuestas</td><td>Modelo entrenado (reglas o patrones aprendidos)</td></tr>
+    <tr><td>Complejidad</td><td>Limitada a lo que una persona puede codificar a mano</td><td>Escala a problemas complejos (visión, lenguaje, recomendación)</td></tr>
+    <tr><td>Mantenimiento</td><td>Hay que ajustar el código a mano</td><td>Se vuelve a entrenar con casos nuevos</td></tr>
+  </table></div>
+
+  <h2>Simulación: ¿qué enfoque usarías?</h2>
+  <p>Lee cada situación y elige el enfoque. Después pulsa <b>Comprobar</b>.</p>
+  <div class="cards" id="sim1"></div>
+  <div class="btns"><button class="p" id="sim1check">Comprobar</button><button id="sim1reset">Reiniciar</button></div>
+  <div class="score" id="sim1score"></div>
+
+  <h2>Ejemplo</h2>
+  <pre>Tradicional: si el total supera 500, el envío es gratis.
+if total &gt; 500:
+    envio = 0
+else:
+    envio = 80
+
+ML: con miles de compras anteriores, el sistema aprende
+qué clientes compran de nuevo (sin escribir la regla a mano).</pre>
+
+  <h2>Autoevaluación</h2>
+  <div id="quiz-s1" class="quiz"></div>
+
+  <div class="colab"><b>En Colab:</b> observa en el Cuaderno 01 (<i>Analizando el dataset</i>) que todo empieza por cargar datos y preguntar qué representan, antes de cualquier modelo.</div>
+
+  <div class="nextprev"><button data-go="prev">← Anterior</button><button class="p" data-go="next">Siguiente →</button></div>
+</section>
+
+<!-- ============================ S2 ============================ -->
+<section class="sec" id="s2" data-title="CRISP-DM">
+  <p class="kicker">Sección 2 · M2S1</p>
+  <h1>El ciclo de vida de los datos (CRISP-DM)</h1>
+  <p class="lead">Un proyecto de datos no empieza con el código: empieza con una pregunta.</p>
+
+  <h2>Apunte</h2>
+  <p><b>CRISP-DM</b> (<i>Cross-Industry Standard Process for Data Mining</i>) es un estándar que organiza un proyecto de datos en seis fases conectadas entre sí:</p>
+  <ol>
+    <li><b>Comprensión del negocio o del problema:</b> definir objetivos y preguntas de investigación.</li>
+    <li><b>Comprensión de los datos:</b> recolectar, explorar e inspeccionar para evaluar su calidad.</li>
+    <li><b>Preparación de los datos:</b> limpiar, transformar, filtrar y estructurar el dataset.</li>
+    <li><b>Modelado:</b> elegir y aplicar algoritmos de ML sobre las variables seleccionadas.</li>
+    <li><b>Evaluación:</b> comprobar si el modelo cumple las métricas y los objetivos.</li>
+    <li><b>Despliegue:</b> integrar el modelo en un sistema real (un bot, una API o un tablero).</li>
+  </ol>
+  <div class="warn">Las fases <b>no son una escalera de una sola vía</b>: si en la evaluación algo no funciona, normalmente regresas a preparar los datos o a revisar el problema.</div>
+
+  <h2>Simulación: ordena el ciclo</h2>
+  <p>Toca las fases en el orden correcto. Si te equivocas, pulsa <b>Borrar último</b>.</p>
+  <div class="btns" id="sim2pool"></div>
+  <div class="sq" id="sim2ans" aria-label="Tu orden"></div>
+  <div class="btns"><button id="sim2undo">Borrar último</button><button class="p" id="sim2check">Comprobar orden</button><button id="sim2reset">Reiniciar</button></div>
+  <div class="explain" id="sim2msg">Ordena las seis fases de la primera a la última.</div>
+
+  <h2>Ejemplo</h2>
+  <p>Una tienda de útiles quiere saber qué productos comprará cada sucursal el próximo mes. Antes de tocar un modelo, la pregunta de negocio (fase 1) define qué variable se debe predecir y qué datos hacen falta (fase 2).</p>
+
+  <h2>Autoevaluación</h2>
+  <div id="quiz-s2" class="quiz"></div>
+
+  <div class="nextprev"><button data-go="prev">← Anterior</button><button class="p" data-go="next">Siguiente →</button></div>
+</section>
+
+<!-- ============================ S3 ============================ -->
+<section class="sec" id="s3" data-title="Jupyter vs Colab">
+  <p class="kicker">Sección 3 · M2S1</p>
+  <h1>Entorno de trabajo: Jupyter Notebooks vs. Google Colab</h1>
+  <p class="lead">Los dos ejecutan el mismo código Python. Cambia dónde corre y dónde se guardan tus archivos.</p>
+
+  <h2>Apunte</h2>
+  <div class="scroll"><table>
+    <tr><th>Característica</th><th>Jupyter Notebooks (local)</th><th>Google Colab (nube)</th></tr>
+    <tr><td>Ejecución</td><td>En tu computadora</td><td>En servidores de Google</td></tr>
+    <tr><td>Hardware</td><td>Los recursos de tu equipo</td><td>Acceso gratuito o de pago a GPUs y TPUs</td></tr>
+    <tr><td>Configuración</td><td>Requiere instalación (Anaconda, pip, entornos virtuales)</td><td>Listo para usar desde el navegador</td></tr>
+    <tr><td>Archivos y persistencia</td><td>Directamente en el disco duro</td><td>Hay que montar Google Drive o subir los archivos</td></tr>
+  </table></div>
+
+  <h2>Simulación: ¿cuál elegirías?</h2>
+  <div class="q" data-sim="s3">
+    <p>1. Quiero usar una GPU y no quiero instalar nada en mi computadora.</p>
+    <label><input type="radio" name="s3a" value="0"> Jupyter Notebooks (local)</label>
+    <label><input type="radio" name="s3a" value="1"> Google Colab</label>
+  </div>
+  <div class="q">
+    <p>2. Quiero que mis archivos queden guardados directamente en mi equipo.</p>
+    <label><input type="radio" name="s3b" value="0"> Jupyter Notebooks (local)</label>
+    <label><input type="radio" name="s3b" value="1"> Google Colab</label>
+  </div>
+  <div class="btns"><button class="p" id="sim3check">Comprobar</button></div>
+  <div class="explain" id="sim3msg">Elige una opción en cada pregunta.</div>
+
+  <h2>Ejemplo</h2>
+  <pre># En cualquiera de los dos entornos, el código es el mismo:
+import pandas as pd
+df = pd.DataFrame({"nombre": ["Ana", "Bruno"], "nota": [8, 6]})
+df</pre>
+
+  <h2>Autoevaluación</h2>
+  <div id="quiz-s3" class="quiz"></div>
+
+  <div class="colab"><b>En Colab:</b> antes de la primera celda, ve a <i>Archivo → Guardar una copia en Drive</i> para conservar tu trabajo. Los cuadernos del curso se abren desde el enlace que indique tu docente.</div>
+
+  <div class="nextprev"><button data-go="prev">← Anterior</button><button class="p" data-go="next">Siguiente →</button></div>
+</section>
+
+<!-- ============================ S4 ============================ -->
+<section class="sec" id="s4" data-title="Dato, información, conocimiento">
+  <p class="kicker">Sección 4 · M2S1</p>
+  <h1>Del dato al conocimiento</h1>
+  <p class="lead">Un número solo no dice nada. Lo que lo vuelve útil es el contexto y la interpretación.</p>
+
+  <h2>Apunte</h2>
+  <div class="pyr" aria-label="Pirámide del conocimiento">
+    <div class="c">Conocimiento: interpretación que fundamenta una decisión</div>
+    <div class="i">Información: un dato dentro de un contexto</div>
+    <div class="d">Dato: un valor bruto, sin contexto</div>
+  </div>
+  <ul>
+    <li><b>Dato:</b> <i>8</i>.</li>
+    <li><b>Información:</b> <i>La nota de Ana en Matemática fue 8.</i></li>
+    <li><b>Conocimiento:</b> <i>Ana mejoró de 6,5 a 8 tras subir sus horas de estudio.</i></li>
+  </ul>
+  <p>Los tres niveles se usan al mismo tiempo: primero observas el dato, luego le das contexto y por último lo interpretas con cuidado.</p>
+
+  <h2>Simulación: ¿en qué nivel está?</h2>
+  <div class="cards" id="sim4"></div>
+  <div class="btns"><button class="p" id="sim4check">Comprobar</button></div>
+  <div class="score" id="sim4score"></div>
+
+  <h2>Autoevaluación</h2>
+  <div id="quiz-s4" class="quiz"></div>
+
+  <div class="nextprev"><button data-go="prev">← Anterior</button><button class="p" data-go="next">Siguiente →</button></div>
+</section>
+
+<!-- ============================ S5 ============================ -->
+<section class="sec" id="s5" data-title="Dataset y DataFrame">
+  <p class="kicker">Sección 5 · M2S1</p>
+  <h1>Dataset y DataFrame: cómo se lee una tabla</h1>
+  <p class="lead">Un <b>dataset</b> es un conjunto organizado de datos. Con Pandas se representa como un <b>DataFrame</b>: una tabla con filas, columnas y valores.</p>
+
+  <h2>Apunte</h2>
+  <div class="scroll"><table>
+    <tr><th>Elemento</th><th>Qué representa</th><th>Ejemplo</th></tr>
+    <tr><td>Fila</td><td>Una observación, registro o caso</td><td>Un estudiante</td></tr>
+    <tr><td>Columna</td><td>Una variable o característica</td><td>La nota</td></tr>
+    <tr><td>Valor</td><td>Un dato concreto en una celda</td><td>8</td></tr>
+    <tr><td>Índice</td><td>La identificación de cada fila que asigna Pandas</td><td>0, 1, 2, 3, 4</td></tr>
+    <tr><td>Dataset</td><td>El conjunto completo de datos</td><td>La tabla de estudiantes</td></tr>
+  </table></div>
+  <p>El <b>índice</b> no es una columna de los datos originales. Pandas lo crea para identificar las filas, y normalmente empieza en 0.</p>
+
+  <h2>Simulación: toca la tabla</h2>
+  <p>Toca un encabezado, una fila, un valor o el índice para ver qué representa.</p>
+  <div class="scroll" id="sim5table"></div>
+  <div class="explain" id="sim5msg">Toca cualquier parte de la tabla.</div>
+
+  <h2>Ejemplo</h2>
+  <pre>import pandas as pd
+
+datos = {
+    "nombre": ["Ana", "Bruno", "Carla", "Diego", "Elena"],
+    "edad": [15, 16, 15, 17, 16],
+    "curso": ["3A", "3B", "3A", "4A", "3B"],
+    "horas_estudio": [4, 2, 6, 1, 5],
+    "nota": [8, 6, 9, 5, 8]
+}
+df = pd.DataFrame(datos)
+df</pre>
+
+  <h2>Autoevaluación</h2>
+  <div id="quiz-s5" class="quiz"></div>
+
+  <div class="colab"><b>En Colab:</b> en el Cuaderno 01 y en el Cuaderno 02 la primera tarea es crear o cargar el DataFrame y después preguntar qué representa cada fila y cada columna.</div>
+
+  <div class="nextprev"><button data-go="prev">← Anterior</button><button class="p" data-go="next">Siguiente →</button></div>
+</section>
+
+<!-- ============================ S6 ============================ -->
+<section class="sec" id="s6" data-title="Crear un DataFrame">
+  <p class="kicker">Sección 6 · M2S1</p>
+  <h1>Crear un DataFrame desde un diccionario</h1>
+  <p class="lead">Un diccionario de Python pasa a ser una tabla en una sola línea: <code>pd.DataFrame(datos)</code>.</p>
+
+  <h2>Apunte</h2>
+  <ul>
+    <li>Las <b>claves</b> del diccionario son los nombres de las columnas.</li>
+    <li>Cada <b>lista</b> son los valores de esa columna.</li>
+    <li>Todas las listas deben tener la misma cantidad de valores, porque cada posición corresponde a una fila.</li>
+  </ul>
+
+  <h2>Simulación: arma tu tabla</h2>
+  <p>Cambia los valores del texto (una columna por línea, valores separados por comas) y pulsa <b>Crear DataFrame</b>. Prueba a dejar una columna con un valor de menos.</p>
+  <textarea id="sim6in" spellcheck="false" aria-label="Columnas y valores">nombre: Ana, Bruno, Carla
+nota: 8, 6, 9</textarea>
+  <div class="btns"><button class="p" id="sim6go">Crear DataFrame</button><button id="sim6reset">Restaurar ejemplo</button></div>
+  <div class="explain" id="sim6msg"></div>
+  <div class="scroll" id="sim6out"></div>
+
+  <h2>Ejemplo</h2>
+  <pre>datos = {
+    "nombre": ["Ana", "Bruno", "Carla"],
+    "nota":   [8, 6, 9]
+}
+df = pd.DataFrame(datos)
+df</pre>
+
+  <h2>Autoevaluación</h2>
+  <div id="quiz-s6" class="quiz"></div>
+
+  <div class="nextprev"><button data-go="prev">← Anterior</button><button class="p" data-go="next">Siguiente →</button></div>
+</section>
+
+<!-- ============================ S7 ============================ -->
+<section class="sec" id="s7" data-title="Tipos de variables">
+  <p class="kicker">Sección 7 · M2S1</p>
+  <h1>Tipos de variables</h1>
+  <p class="lead">Antes de calcular algo, pregúntate qué tipo de información tiene la columna. Eso decide qué operaciones tienen sentido.</p>
+
+  <h2>Apunte</h2>
+  <div class="scroll"><table>
+    <tr><th>Tipo</th><th>Qué es</th><th>Ejemplos</th></tr>
+    <tr><td>Numérica discreta</td><td>Valores contables</td><td>horas_estudio, edad, cantidad de hermanos</td></tr>
+    <tr><td>Numérica continua</td><td>Medidas que admiten decimales</td><td>precio, temperatura</td></tr>
+    <tr><td>Categórica / nominal</td><td>Clasificaciones sin orden</td><td>curso, sucursal, color</td></tr>
+    <tr><td>Ordinal</td><td>Categorías con jerarquía</td><td>bajo &lt; medio &lt; alto; malo &lt; bueno &lt; excelente</td></tr>
+    <tr><td>Temporal</td><td>Fechas, horas y momentos</td><td>fecha de compra, año, hora de ingreso</td></tr>
+    <tr><td>Texto</td><td>Frases u observaciones escritas</td><td>comentario, descripción</td></tr>
+  </table></div>
+  <div class="warn">Un número no siempre es numérico: el código postal o un número de matrícula funcionan como etiquetas. Pregúntate si tiene sentido sumarlo o sacar su promedio.</div>
+
+  <h2>Simulación: clasifica las columnas</h2>
+  <p>Este es el DataFrame de ventas de una librería. Elige el tipo de cada columna y pulsa <b>Comprobar</b>.</p>
+  <div id="sim7" class="cards"></div>
+  <div class="btns"><button class="p" id="sim7check">Comprobar</button></div>
+  <div class="score" id="sim7score"></div>
+
+  <h2>Autoevaluación</h2>
+  <div id="quiz-s7" class="quiz"></div>
+
+  <div class="colab"><b>En Colab:</b> en el Cuaderno 02, la sección de exploración usa <code>info()</code> para ver qué tipo de dato asignó Pandas a cada columna.</div>
+
+  <div class="nextprev"><button data-go="prev">← Anterior</button><button class="p" data-go="next">Siguiente →</button></div>
+</section>
+
+<!-- ============================ S8 ============================ -->
+<section class="sec" id="s8" data-title="Inspeccionar un DataFrame">
+  <p class="kicker">Sección 8 · M2S1 · Comprensión de los datos</p>
+  <h1>Inspeccionar un DataFrame</h1>
+  <p class="lead">Antes de limpiar, graficar o modelar, dedica unos minutos a conocer la estructura del dataset.</p>
+
+  <h2>Apunte</h2>
+  <div class="scroll"><table>
+    <tr><th>Herramienta</th><th>Pregunta que responde</th></tr>
+    <tr><td><code>head()</code> / <code>tail()</code></td><td>¿Cómo empiezan y cómo terminan las filas?</td></tr>
+    <tr><td><code>shape</code></td><td>¿Cuántas filas y columnas tiene? (es un atributo, sin paréntesis)</td></tr>
+    <tr><td><code>columns</code></td><td>¿Cómo se llaman las columnas?</td></tr>
+    <tr><td><code>index</code></td><td>¿Cómo está identificada cada fila?</td></tr>
+    <tr><td><code>dtypes</code></td><td>¿Qué tipo de dato tiene cada columna?</td></tr>
+    <tr><td><code>info()</code></td><td>Resumen general: filas, columnas, valores no nulos, tipos y memoria</td></tr>
+    <tr><td><code>describe()</code></td><td>Estadísticas básicas de las columnas numéricas</td></tr>
+    <tr><td><code>describe(include="all")</code></td><td>Resumen de todas las columnas, también las de texto</td></tr>
+    <tr><td><code>value_counts()</code></td><td>Cuántas veces aparece cada valor de una columna</td></tr>
+  </table></div>
+  <div class="tip">Ninguna de estas instrucciones modifica el DataFrame. Solo lo observan.</div>
+
+  <h2>Simulación: consola de inspección</h2>
+  <p>Este es el DataFrame de ventas de una librería: 10 filas, cada una una venta. Pulsa un comando y lee la salida, como lo harías en Colab.</p>
+  <div class="btns" id="sim8btns"></div>
+  <pre id="sim8out">Pulsa un comando para ver la salida.</pre>
+  <div class="tip">Las salidas corresponden a la versión más reciente de Pandas: el texto aparece como <code>str</code>.</div>
+
+  <h2>Simulación: ¿qué herramienta?</h2>
+  <div class="q">
+    <p>a) ¿Cuántas filas y columnas tiene el DataFrame?</p>
+    <select data-q="a" aria-label="Respuesta a"><option value="">Elige…</option><option>shape</option><option>columns</option><option>dtypes</option><option>head()</option></select>
+  </div>
+  <div class="q">
+    <p>b) ¿Pandas está leyendo la columna <code>fecha</code> como fecha real o como texto?</p>
+    <select data-q="b" aria-label="Respuesta b"><option value="">Elige…</option><option>dtypes</option><option>describe()</option><option>tail()</option><option>index</option></select>
+  </div>
+  <div class="btns"><button class="p" id="sim8check">Comprobar</button></div>
+  <div class="explain" id="sim8msg">Elige una herramienta en cada pregunta.</div>
+
+  <h2>Lectura</h2>
+  <p>En la salida de <code>info()</code> de la librería, cada columna tiene <b>10 non-null</b>: eso significa que no hay valores faltantes, porque el dataset tiene 10 filas. Si una columna dijera <b>8 non-null</b>, dos filas no tendrían valor.</p>
+  <p>La columna <code>fecha</code> aparece como texto. Si quisieras ordenar o agrupar por tiempo, habría que convertirla a fecha.</p>
+
+  <h2>Autoevaluación</h2>
+  <div id="quiz-s8" class="quiz"></div>
+
+  <div class="colab"><b>En Colab:</b> el Cuaderno 02 hace esta misma inspección con <code>df.info()</code>, <code>df.isnull().sum()</code> y <code>df.describe()</code>.</div>
+
+  <div class="nextprev"><button data-go="prev">← Anterior</button><button class="p" data-go="next">Siguiente →</button></div>
+</section>
+
+<!-- ============================ S9 ============================ -->
+<section class="sec" id="s9" data-title="Del código a la interpretación">
+  <p class="kicker">Sección 9 · M2S1 · Interpretación</p>
+  <h1>Del código a la interpretación</h1>
+  <p class="lead">Pandas calcula. Tú interpretas. Un número sin contexto no se convierte en conocimiento.</p>
+
+  <h2>Apunte</h2>
+  <div class="flow"><span>código</span><b>→</b><span>resultado</span><b>→</b><span>interpretación</span></div>
+  <p>Antes de escribir una conclusión, pregúntate:</p>
+  <ul>
+    <li>¿Qué representa este resultado? ¿A qué columna se refiere?</li>
+    <li>¿Qué conclusión puedo sacar?</li>
+    <li>¿Qué conclusión <b>no</b> debería sacar todavía?</li>
+  </ul>
+  <p>Un dataset es siempre una representación <b>parcial</b> de una situación. Puede mostrar que dos variables parecen relacionadas, pero no siempre demuestra una causa.</p>
+
+  <h2>Simulación: separa lo que muestran los datos de lo que interpretas</h2>
+  <p>Tomamos el dataset de 5 estudiantes (Ana, Bruno, Carla, Diego y Elena) con las columnas <code>horas_estudio</code> y <code>nota</code>. Clasifica cada frase.</p>
+  <div class="cards" id="sim9"></div>
+  <div class="btns"><button class="p" id="sim9check">Comprobar</button></div>
+  <div class="score" id="sim9score"></div>
+
+  <h2>Autoevaluación</h2>
+  <div id="quiz-s9" class="quiz"></div>
+
+  <div class="nextprev"><button data-go="prev">← Anterior</button><button class="p" data-go="next">Siguiente →</button></div>
+</section>
+
+<!-- ============================ S10 ============================ -->
+<section class="sec" id="s10" data-title="Texto como dato">
+  <p class="kicker">Sección 10 · M2S2</p>
+  <h1>Texto como dato: cadenas (<code>str</code>)</h1>
+  <p class="lead">Para que una computadora trabaje con un comentario, primero hay que limpiarlo y separarlo.</p>
+
+  <h2>Apunte</h2>
+  <ul>
+    <li><b>Procesamiento de Lenguaje Natural (PLN):</b> técnicas para que la computadora trabaje con texto escrito por personas.</li>
+    <li><b>Casos de uso:</b> chatbots (responden preguntas o ejecutan acciones), traducción automática (de un idioma a otro) y análisis de sentimiento (clasificar reseñas en positivo, negativo o neutro).</li>
+  </ul>
+  <p>Algunos métodos de las cadenas que usarás:</p>
+  <div class="scroll"><table>
+    <tr><th>Método o recurso</th><th>Para qué sirve</th></tr>
+    <tr><td><code>strip()</code></td><td>Quita espacios al principio y al final</td></tr>
+    <tr><td><code>lower()</code></td><td>Pasa todo a minúsculas</td></tr>
+    <tr><td><code>split(" ")</code></td><td>Separa el texto en una lista de palabras</td></tr>
+    <tr><td><code>replace("a", "b")</code></td><td>Reemplaza una parte del texto por otra</td></tr>
+    <tr><td><code>texto[0:7]</code></td><td>Toma una parte del texto (<i>slicing</i>); el número final no se incluye</td></tr>
+  </table></div>
+
+  <h2>Simulación: laboratorio de cadenas</h2>
+  <p>Escribe o cambia el texto y prueba cada operación. Observa cómo cambia.</p>
+  <input type="text" id="sim10in" value="Análisis de Sentimiento con Python" aria-label="Texto">
+  <div class="btns">
+    <button data-op="strip">strip()</button>
+    <button data-op="lower">lower()</button>
+    <button data-op="split">split(" ")</button>
+    <button data-op="replace">replace("Python", "Pandas")</button>
+    <button data-op="slice">[0:8]</button>
+  </div>
+  <div class="explain"><b>Resultado:</b> <code id="sim10out">—</code></div>
+  <p class="mut" style="color:var(--mut)">Cuenta: <code>"análisis"</code> tiene 8 letras, por eso el corte <code>[0:8]</code> la muestra completa. Si cortas en 7, pierdes la última letra.</p>
+
+  <h2>Ejemplo</h2>
+  <pre>texto = " Análisis de Sentimiento con Python "
+texto_limpio = texto.strip().lower()
+# "análisis de sentimiento con python"
+palabras = texto_limpio.split(" ")
+reemplazo = texto_limpio.replace("python", "Pandas")
+subcadena = texto_limpio[0:8]   # "análisi" + "s" = "análisis"</pre>
+
+  <h2>Autoevaluación</h2>
+  <div id="quiz-s10" class="quiz"></div>
+
+  <div class="colab"><b>En Colab:</b> el Cuaderno 02 trabaja las columnas de texto con <code>describe(include="all")</code>; en la siguiente práctica las limpiarás con estos mismos métodos.</div>
+
+  <div class="nextprev"><button data-go="prev">← Anterior</button><button class="p" data-go="next">Siguiente →</button></div>
+</section>
+
+<!-- ============================ S11 ============================ -->
+<section class="sec" id="s11" data-title="Expresiones regulares">
+  <p class="kicker">Sección 11 · M2S2</p>
+  <h1>Expresiones regulares (REGEX)</h1>
+  <p class="lead">Una expresión regular es un patrón que describe cómo se ve un texto. Sirve para buscar, extraer y limpiar.</p>
+
+  <h2>Apunte</h2>
+  <div class="scroll"><table>
+    <tr><th>Patrón</th><th>Significa</th></tr>
+    <tr><td><code>\d</code></td><td>Cualquier dígito (0 al 9)</td></tr>
+    <tr><td><code>\w</code></td><td>Letra, número o guion bajo</td></tr>
+    <tr><td><code>\s</code></td><td>Espacio, tabulación o salto de línea</td></tr>
+    <tr><td><code>+</code></td><td>Uno o más elementos seguidos</td></tr>
+    <tr><td><code>*</code></td><td>Cero o más elementos seguidos</td></tr>
+    <tr><td><code>[A-Z]</code></td><td>Un rango de caracteres (aquí, letras mayúsculas)</td></tr>
+    <tr><td><code>[^\w\s]</code></td><td>Cualquier carácter que no sea letra, número, guion bajo ni espacio (por ejemplo, un signo)</td></tr>
+  </table></div>
+  <div class="scroll"><table>
+    <tr><th>Función de <code>re</code></th><th>Qué hace</th></tr>
+    <tr><td><code>re.findall(patrón, texto)</code></td><td>Devuelve una lista con todas las coincidencias</td></tr>
+    <tr><td><code>re.search(patrón, texto)</code></td><td>Busca la primera coincidencia</td></tr>
+    <tr><td><code>re.sub(patrón, nuevo, texto)</code></td><td>Reemplaza las coincidencias</td></tr>
+  </table></div>
+
+  <h2>Simulación: probador de patrones</h2>
+  <p>El texto es un comentario real del plan de clase. Escribe un patrón o usa un botón de ejemplo.</p>
+  <input type="text" id="sim11text" value="Excelente producto, me llegó el 10/03/2026. Código de pedido: #9482." aria-label="Texto de prueba">
+  <div class="btns">
+    <button data-pat="\d+">\d+</button>
+    <button data-pat="\d{2}/\d{2}/\d{4}">Fecha</button>
+    <button data-pat="#\d+">#\d+</button>
+    <button data-pat="[^\w\s]">[^\w\s]</button>
+  </div>
+  <input type="text" id="sim11pat" value="\d+" aria-label="Patrón" style="font-family:ui-monospace,Menlo,Consolas,monospace">
+  <div class="btns"><button class="p" id="sim11go">Buscar coincidencias</button></div>
+  <div class="explain" id="sim11out">—</div>
+  <div class="warn">Este probador usa JavaScript. En Python, <code>\w</code> también reconoce letras con acento (como la <i>á</i>); en JavaScript no. Por eso, un patrón que limpia signos puede comportarse distinto con palabras acentuadas. Compara siempre con Colab.</div>
+
+  <h2>Autoevaluación</h2>
+  <div id="quiz-s11" class="quiz"></div>
+
+  <div class="colab"><b>En Colab:</b> prueba estos patrones con <code>re.findall</code> y <code>re.sub</code> sobre las columnas de texto del DataFrame de reseñas.</div>
+
+  <div class="nextprev"><button data-go="prev">← Anterior</button><button class="p" data-go="next">Siguiente →</button></div>
+</section>
+
+<!-- ============================ S12 ============================ -->
+<section class="sec" id="s12" data-title="Práctica integradora">
+  <p class="kicker">Sección 12 · M2S1 + M2S2</p>
+  <h1>Práctica integradora: reseñas de clientes</h1>
+  <p class="lead">Vas a juntar lo que aprendiste: un DataFrame, su inspección, limpieza con texto y una regla de clasificación. Y vas a descubrir por qué las reglas escritas a mano tienen límites.</p>
+
+  <h2>Los datos</h2>
+  <div class="scroll"><table class="df" id="reseTable"></table></div>
+
+  <h2>Paso a paso</h2>
+  <ol>
+    <li><b>Crea el DataFrame</b> desde un diccionario con las cinco columnas.</li>
+    <li><b>Inspecciona</b>: <code>shape</code>, <code>dtypes</code>, <code>info()</code>. ¿La columna <code>fecha</code> es fecha o texto?</li>
+    <li><b>Limpia</b> el comentario: minúsculas y sin signos (<code>re.sub(r'[^\w\s]', '', texto)</code>).</li>
+    <li><b>Extrae</b> el código de pedido con <code>re.findall(r'#\d+', texto)</code>.</li>
+    <li><b>Clasifica</b> con la regla de palabras (simulación de abajo) y guarda el resultado en una columna nueva.</li>
+    <li><b>Revisa</b> cada resultado. Anota cuál no concuerda con lo que tú leíste.</li>
+  </ol>
+
+  <h2>Simulación: el clasificador de reglas</h2>
+  <p>Esta es la regla del plan de clase: si el comentario contiene una palabra positiva, es <b>Positivo</b>; si no, si contiene una negativa, es <b>Negativo</b>; si no tiene ninguna, es <b>Neutro</b>.</p>
+  <div class="box"><p style="margin:0"><b>Positivas:</b> excelente, buena, encantó, perfecto, super<br><b>Negativas:</b> pésimo, roto, malo, mala, tardó</p></div>
+  <div id="sim12" class="cards"></div>
+  <div class="btns"><button class="p" id="sim12run">Clasificar todas</button></div>
+  <div class="explain" id="sim12msg">Pulsa el botón para aplicar la regla a las cinco reseñas.</div>
+
+  <h2>Reflexiona</h2>
+  <ol>
+    <li>¿Qué reseña no concuerda con tu lectura? Escribe por qué crees que pasó.</li>
+    <li>¿Qué pasaría con una frase como <i>«no me gustó nada»</i>? ¿La regla entiende la negación?</li>
+    <li>¿Cómo cambiaría el trabajo si tuvieras miles de reseñas ya etiquetadas? ¿Qué ventaja daría un modelo de ML?</li>
+  </ol>
+
+  <h2>Autoevaluación</h2>
+  <div id="quiz-s12" class="quiz"></div>
+
+  <div class="colab"><b>En Colab:</b> el entregable es el cuaderno con las celdas ejecutadas, las salidas y tus respuestas de reflexión.</div>
+
+  <div class="nextprev"><button data-go="prev">← Anterior</button><span></span></div>
+</section>
+
+<!-- ============================ S13 ============================ -->
+<section class="sec" id="s13" data-title="Lo que sigue">
+  <p class="kicker">Cierre · Hacia dónde vamos</p>
+  <h1>Lo que sigue: del DataFrame al modelo</h1>
+  <p class="lead">Hoy aprendiste a conocer un dataset. Ese es el primer paso de cualquier proyecto de datos.</p>
+
+  <h2>Apunte</h2>
+  <div class="flow"><span><b>Dataset / DataFrame</b></span><b>→</b><span>Inspección</span><b>→</b><span>Limpieza</span><b>→</b><span>Modelo</span><b>→</b><span>Evaluación</span><b>→</b><span>Despliegue</span></div>
+  <p>Lo que inspeccionas hoy es lo que después se prepara y se usa para entrenar un modelo. Mientras mejor conozcas tu DataFrame, mejor podrás decidir qué limpiar y qué variables usar.</p>
+  <p>Dos ideas que verás más adelante, sin profundizar todavía:</p>
+  <ul>
+    <li><b>Aprendizaje supervisado:</b> los datos traen la respuesta, como la columna que indica si un alumno aprobó.</li>
+    <li><b>Aprendizaje no supervisado:</b> los datos no traen respuesta, y el sistema busca patrones por sí mismo.</li>
+  </ul>
+  <div class="tip">Tu docente presentará ambos temas en la exposición. Por ahora basta con saber que existen y que los dos parten de un dataset bien conocido.</div>
+
+  <h2>Autoevaluación</h2>
+  <div id="quiz-s13" class="quiz"></div>
+
+  <div class="nextprev"><button data-go="prev">← Anterior</button><span></span></div>
+</section>
+
+<footer>
+  Basado en el plan de clase del 2.º parcial (M2S1 y M2S2) y en el libro <i>Ciencia de Datos con Python</i>, Tomo 1, capítulos 1 y 2 (material de uso educativo del curso). Este sitio es de estudio y no sustituye la explicación en clase.
+</footer>
+
+</main>
+
+<script>
+/* ---------- DATOS ---------- */
+var LIB = {
+  cols: ["producto","categoria","precio","cantidad_vendida","sucursal","fecha"],
+  rows: [
+    ["Cuaderno","Libreria",1200,15,"Centro","2024-03-01"],
+    ["Lapicera","Libreria",350,40,"Centro","2024-03-01"],
+    ["Mochila","Accesorios",8500,5,"Norte","2024-03-02"],
+    ["Regla","Libreria",500,25,"Sur","2024-03-02"],
+    ["Cartuchera","Accesorios",3200,8,"Norte","2024-03-03"],
+    ["Cuaderno","Libreria",1250,12,"Sur","2024-03-03"],
+    ["Marcadores","Libreria",1800,10,"Centro","2024-03-04"],
+    ["Carpeta","Libreria",950,18,"Norte","2024-03-04"],
+    ["Goma","Libreria",300,30,"Sur","2024-03-05"],
+    ["Lapiz","Libreria",250,50,"Centro","2024-03-05"]
+  ]
+};
+var EST = {
+  cols: ["nombre","edad","curso","horas_estudio","nota"],
+  rows: [
+    ["Ana",15,"3A",4,8],["Bruno",16,"3B",2,6],["Carla",15,"3A",6,9],["Diego",17,"4A",1,5],["Elena",16,"3B",5,8]
+  ]
+};
+var RESE = [
+  [101,"Centro","2024-03-01","¡Excelente atención! Compré 3 cuadernos el día 01/03."],
+  [102,"Norte","2024-03-02","Pésimo servicio, el producto llegó roto... pedido #8812"],
+  [103,"Sur","2024-03-02","Buena calidad pero la entrega tardó 5 días."],
+  [104,"Centro","2024-03-03","No me gustó para nada, atención muy mala."],
+  [105,"Norte","2024-03-04","¡Me encantó! Todo perfecto y super rápido."]
+];
+var POS = ["excelente","buena","encantó","perfecto","super"];
+var NEG = ["pésimo","roto","malo","mala","tardó"];
+
+/* ---------- PREGUNTAS DE AUTOEVALUACIÓN ---------- */
+var QUIZ = {
+ s1:[
+  {q:"¿Qué recibe un programa tradicional para producir una respuesta?",o:["Reglas explícitas y datos de entrada","Datos y respuestas deseadas","Solo respuestas ya hechas"],a:0,e:"En la programación tradicional la persona escribe las reglas; el programa las aplica a los datos."},
+  {q:"¿Qué le entregas a un sistema de Machine Learning para que aprenda?",o:["Solo reglas if/else","Datos de entrada y respuestas deseadas","Un diagrama de flujo"],a:1,e:"ML aprende los patrones a partir de datos con sus respuestas."},
+  {q:"Cuando cambian los casos, ¿qué requiere menos trabajo manual?",o:["Reescribir el código a mano","Volver a entrenar el modelo con casos nuevos","Borrar los datos"],a:1,e:"En ML se vuelve a entrenar con datos nuevos; en la tradicional hay que ajustar el código."}
+ ],
+ s2:[
+  {q:"¿Cuántas fases tiene CRISP-DM en el plan de clase?",o:["4","5","6","8"],a:2,e:"Son seis fases: comprensión del negocio, de los datos, preparación, modelado, evaluación y despliegue."},
+  {q:"¿Qué fase sigue a la preparación de los datos?",o:["Modelado","Despliegue","Comprensión del negocio"],a:0,e:"Primero preparas los datos y después eliges y aplicas algoritmos."},
+  {q:"Estás eligiendo un algoritmo y aplicándolo a tus variables. ¿En qué fase estás?",o:["Modelado","Evaluación","Despliegue"],a:0,e:"Elegir y aplicar algoritmos es la fase de modelado."}
+ ],
+ s3:[
+  {q:"Quiero usar una GPU sin instalar nada en mi computadora. ¿Qué entorno conviene?",o:["Jupyter local","Google Colab"],a:1,e:"Colab corre en servidores de Google y da acceso gratuito o de pago a GPUs y TPUs."},
+  {q:"¿Dónde quedan guardados directamente los archivos en Jupyter local?",o:["En el disco de tu computadora","Siempre en Kaggle","En ningún lado"],a:0,e:"Con Jupyter los archivos quedan en tu equipo; en Colab hay que montar Drive o subirlos."},
+  {q:"¿Qué requiere Jupyter local antes de usarse?",o:["Solo un navegador","Instalación local (por ejemplo Anaconda o pip)","Una cuenta de Kaggle"],a:1,e:"Jupyter corre en tu máquina, así que necesitas instalarlo con Anaconda, pip o un entorno virtual."}
+ ],
+ s4:[
+  {q:"El número 8 aislado es…",o:["Un dato","Información","Conocimiento"],a:0,e:"Es un valor bruto, sin contexto."},
+  {q:"«La nota de Ana en Matemática fue 8» es…",o:["Un dato","Información","Conocimiento"],a:1,e:"Ya tiene contexto: quién, qué materia y qué valor."},
+  {q:"«Ana mejoró de 6,5 a 8 tras subir sus horas de estudio» es…",o:["Un dato","Información","Conocimiento"],a:2,e:"Relaciona datos e interpreta una situación para fundamentar una conclusión."}
+ ],
+ s5:[
+  {q:"En un DataFrame, cada fila representa normalmente…",o:["Una variable","Una observación o registro","Un tipo de dato"],a:1,e:"Cada fila es un caso: por ejemplo, un estudiante."},
+  {q:"¿Qué es el índice?",o:["Una columna de los datos originales","Un identificador de las filas que asigna Pandas","Un cálculo estadístico"],a:1,e:"El índice no es parte de los datos: sirve para identificar las filas."},
+  {q:"En la tabla de estudiantes, «nota» es…",o:["Una fila","Una columna (variable)","Un valor"],a:1,e:"Una columna reúne una misma variable para todas las observaciones."}
+ ],
+ s6:[
+  {q:"¿Qué estructura de Python se usa para crear un DataFrame desde el código?",o:["Diccionario","Tupla","Conjunto"],a:0,e:"Las claves son los nombres de las columnas y las listas, sus valores."},
+  {q:"En {\"nombre\": [...], \"nota\": [...]}, las claves representan…",o:["Columnas","Filas","Valores"],a:0,e:"Cada clave se convierte en el nombre de una columna."},
+  {q:"¿Qué instrucción devuelve la cantidad de filas de <code>df</code>?",o:["len(df)","df.columns","df.dtypes"],a:0,e:"len(df) cuenta las filas; columns muestra los nombres y dtypes, los tipos."}
+ ],
+ s7:[
+  {q:"Con una columna «edad», ¿qué operación tiene sentido?",o:["Calcular el promedio","Calcular el promedio de nombres","Ninguna"],a:0,e:"Edad es numérica, así que sí se puede promediar."},
+  {q:"«Cantidad de hermanos» es un ejemplo de…",o:["Numérica discreta","Numérica continua","Temporal"],a:0,e:"Se cuenta: valores enteros y contables."},
+  {q:"«Nivel bajo / medio / alto» es un ejemplo de…",o:["Categórica","Ordinal","Texto"],a:1,e:"Son categorías con un orden natural."}
+ ],
+ s8:[
+  {q:"¿Qué atributo devuelve el número de filas y columnas?",o:["shape","columns","dtypes"],a:0,e:"shape devuelve (filas, columnas). No lleva paréntesis porque es un atributo."},
+  {q:"¿Qué herramienta muestra si Pandas interpreta una columna de fecha como texto?",o:["dtypes","head()","describe()"],a:0,e:"dtypes muestra el tipo de dato de cada columna."},
+  {q:"¿Qué comando cuenta cuántas veces aparece cada sucursal?",o:["value_counts()","tail()","index"],a:0,e:"value_counts() cuenta las frecuencias de los valores de una columna."}
+ ],
+ s9:[
+  {q:"Con 5 estudiantes, quienes estudiaron más tienen mejor nota. ¿Cuál afirmación es más prudente?",o:["Estudiar más causa mejores notas","En este dataset, quienes estudiaron más parecen tener notas más altas","El método de estudio es la causa"],a:1,e:"Describe lo que muestran los datos sin afirmar causa."},
+  {q:"Antes de sacar conclusiones, ¿qué conviene preguntarse?",o:["¿Qué información falta? ¿Qué tan confiables son los datos?","Solo si el promedio es alto","Nada"],a:0,e:"Un dataset siempre es una representación parcial."},
+  {q:"Si un cálculo da 7.2, ¿qué nos falta para interpretarlo?",o:["El contexto: qué representa ese número","Nada, ya es información","Solo el tipo de dato"],a:0,e:"Sin contexto es solo un dato; con contexto se vuelve información."}
+ ],
+ s10:[
+  {q:"¿Para qué sirve <code>strip()</code>?",o:["Quitar espacios al principio y al final","Dividir en palabras","Cambiar a mayúsculas"],a:0,e:"Limpia los espacios sobrantes del texto."},
+  {q:"<code>split(\" \")</code> devuelve…",o:["Una lista de palabras","Un número","Un DataFrame"],a:0,e:"Separa el texto cada vez que encuentra un espacio."},
+  {q:"El análisis de sentimiento clasifica un texto en…",o:["Positivo, negativo o neutro","Una fecha","Un número de filas"],a:0,e:"Es uno de los casos de uso del PLN del plan de clase."}
+ ],
+ s11:[
+  {q:"El patrón <code>\\d+</code> busca…",o:["Uno o más dígitos seguidos","Solo letras","Un espacio"],a:0,e:"\\d reconoce dígitos y + pide uno o más seguidos."},
+  {q:"<code>\\d{2}/\\d{2}/\\d{4}</code> busca…",o:["Una fecha con formato DD/MM/AAAA","Un correo electrónico","Un número de teléfono"],a:0,e:"Dos dígitos, barra, dos dígitos, barra y cuatro dígitos."},
+  {q:"<code>[^\\w\\s]</code> sirve para…",o:["Detectar signos y otros caracteres que no son letras, números, guion bajo ni espacio","Buscar espacios","Contar palabras"],a:0,e:"El ^ dentro de los corchetes significa «cualquiera excepto»."}
+ ],
+ s12:[
+  {q:"La reseña 3 («Buena calidad pero la entrega tardó 5 días») salió Positivo. ¿Por qué?",o:["La regla encontró «buena» antes que «tardó» y se detuvo","Porque la reseña es neutra","Porque tiene números"],a:0,e:"La regla revisa primero las palabras positivas y se queda con la primera coincidencia, sin pesar la mezcla de opiniones."},
+  {q:"¿Qué ventaja tiene un modelo de ML frente a reglas escritas a mano?",o:["Puede aprender de ejemplos etiquetados y ajustarse con datos nuevos","Nunca se equivoca","No necesita datos"],a:0,e:"Aprende de los datos; también puede equivocarse, por eso hay que evaluarlo."},
+  {q:"¿Qué conviene hacer antes de confiar en un resultado?",o:["Revisar los datos usados para obtenerlo","Confiar en el primer resultado","Publicarlo de inmediato"],a:0,e:"Antes de confiar en un resultado hay que revisar los datos que lo produjeron."}
+ ],
+s13:[
+  {q:"En CRISP-DM, ¿qué sigue después de comprender y revisar los datos?",o:["Preparación de los datos","Despliegue","Comprensión del negocio"],a:0,e:"Primero se comprenden los datos; después se limpian, transforman y estructuran."},
+  {q:"¿Qué tipo de aprendizaje es aquel en el que los datos traen la respuesta?",o:["Supervisado","No supervisado","Ninguno"],a:0,e:"Cuando hay respuesta conocida en los datos hablamos de aprendizaje supervisado."}
+ ]
+};
+
+/* ---------- UTILIDADES ---------- */
+var $ = function(id){ return document.getElementById(id); };
+function esc(s){ return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
+var DONE = {};
+try { DONE = JSON.parse(localStorage.getItem("cd2p_done") || "{}") || {}; } catch(e){ DONE = {}; }
+function saveDone(){ try { localStorage.setItem("cd2p_done", JSON.stringify(DONE)); } catch(e){} }
+
+/* ---------- NAVEGACIÓN ---------- */
+var SECS = Array.prototype.slice.call(document.querySelectorAll("section.sec"));
+function ids(){ return SECS.map(function(s){ return s.id; }); }
+function current(){ var h = (location.hash || "#inicio").slice(1); return ids().indexOf(h) >= 0 ? h : "inicio"; }
+function buildNav(){
+  var nav = $("nav"), h = "";
+  SECS.forEach(function(s){
+    h += '<a href="#'+s.id+'" data-id="'+s.id+'">'+(s.id==="inicio"?"Inicio":esc(s.getAttribute("data-title")))+'</a>';
+  });
+  nav.innerHTML = h;
+}
+function updateNav(){
+  var cur = current(), idx = ids().indexOf(cur);
+  document.querySelectorAll("nav#nav a").forEach(function(a){
+    a.classList.toggle("on", a.getAttribute("data-id") === cur);
+    a.classList.toggle("done", !!DONE[a.getAttribute("data-id")]);
+  });
+  var total = SECS.length - 1, n = Object.keys(DONE).filter(function(k){ return DONE[k]; }).length;
+  var pct = Math.round(100 * n / total);
+  $("pct").textContent = n + " de " + total + " secciones · " + pct + " %";
+  $("bar").style.width = pct + "%";
+  var on = document.querySelector("nav#nav a.on");
+  if(on && on.scrollIntoView){ on.scrollIntoView({block:"nearest", inline:"center"}); }
+}
+function show(){
+  var cur = current();
+  SECS.forEach(function(s){ s.classList.toggle("on", s.id === cur); });
+  updateNav();
+  window.scrollTo(0,0);
+}
+document.addEventListener("click", function(e){
+  var b = e.target.closest("[data-go]");
+  if(!b) return;
+  var idx = ids().indexOf(current());
+  var dir = b.getAttribute("data-go") === "next" ? 1 : -1;
+  var target = ids()[idx + dir];
+  if(target) location.hash = target;
+});
+window.addEventListener("hashchange", show);
+
+/* ---------- CUESTIONARIOS ---------- */
+function renderQuiz(id){
+  var box = $("quiz-"+id); if(!box) return;
+  var items = QUIZ[id], h = "";
+  items.forEach(function(it, i){
+    h += '<div class="q" data-i="'+i+'"><p>'+(i+1)+'. '+it.q+'</p>';
+    it.o.forEach(function(op, j){
+      h += '<label><input type="radio" name="'+id+'-'+i+'" value="'+j+'"> <span>'+op+'</span></label>';
+    });
+    h += '<div class="fb" style="display:none"></div></div>';
+  });
+  h += '<div class="btns"><button class="p" data-check="'+id+'">Revisar respuestas</button><button data-retry="'+id+'">Intentar de nuevo</button></div><div class="score" id="score-'+id+'"></div>';
+  box.innerHTML = h;
+}
+document.addEventListener("click", function(e){
+  var c = e.target.getAttribute && e.target.getAttribute("data-check");
+  var r = e.target.getAttribute && e.target.getAttribute("data-retry");
+  if(c){ checkQuiz(c); }
+  if(r){ renderQuiz(r); }
+});
+function checkQuiz(id){
+  var items = QUIZ[id], ok = 0, box = $("quiz-"+id);
+  items.forEach(function(it, i){
+    var sel = box.querySelector('input[name="'+id+'-'+i+'"]:checked');
+    var fb = box.querySelector('.q[data-i="'+i+'"] .fb');
+    var v = sel ? parseInt(sel.value,10) : -1;
+    var good = v === it.a;
+    if(good) ok++;
+    fb.style.display = "block";
+    fb.className = "fb " + (good ? "ok" : "bad");
+    fb.innerHTML = (good ? "✅ Correcto. " : (v<0 ? "Elige una opción. " : "❌ No es esa. ")) + it.e;
+  });
+  var total = items.length, need = Math.ceil(total * 2 / 3);
+  var s = $("score-"+id);
+  s.innerHTML = "Aciertos: " + ok + " de " + total + (ok >= need ? " · <span class='ok'>Sección completada ✓</span>" : " · Repasa el apunte y vuelve a intentarlo.");
+  if(ok >= need && !DONE[id]){ DONE[id] = true; saveDone(); updateNav(); }
+}
+
+/* ---------- S1: tarjetas tradicional vs ML ---------- */
+var S1 = [
+  {f:"Calcular la nota final con una fórmula fija de ponderación.", r:"T"},
+  {f:"Detectar si una reseña es positiva a partir de miles de reseñas ya etiquetadas.", r:"M"},
+  {f:"Si la compra supera 500, el envío es gratis (regla escrita).", r:"T"},
+  {f:"Reconocer rostros en fotografías.", r:"M"},
+  {f:"Cuando cambian los casos, volver a entrenar el modelo con datos nuevos.", r:"M"},
+  {f:"Mostrar un mensaje cuando la contraseña tiene menos de 8 caracteres.", r:"T"}
+];
+function renderS1(){
+  var h = "";
+  S1.forEach(function(c,i){
+    h += '<div class="card"><p class="frase">'+esc(c.f)+'</p><div class="btns" style="margin:0">'+
+      '<button data-s1="'+i+'" data-v="T">Tradicional</button>'+
+      '<button data-s1="'+i+'" data-v="M">Machine Learning</button></div><div class="res" id="s1r'+i+'"></div></div>';
+  });
+  $("sim1").innerHTML = h;
+  $("sim1score").textContent = "";
+  S1.forEach(function(_, i){ S1[i].sel = null; });
+}
+document.addEventListener("click", function(e){
+  var t = e.target.getAttribute && e.target.getAttribute("data-s1");
+  if(t !== null && t !== undefined && t !== ""){
+    S1[parseInt(t,10)].sel = e.target.getAttribute("data-v");
+    document.querySelectorAll('[data-s1="'+t+'"]').forEach(function(b){ b.classList.toggle("p", b.getAttribute("data-v") === S1[parseInt(t,10)].sel); });
+  }
+});
+$("sim1check").onclick = function(){
+  var ok = 0;
+  S1.forEach(function(c,i){
+    var good = c.sel === c.r; if(good) ok++;
+    $("s1r"+i).innerHTML = c.sel ? (good ? '<span class="ok">✅ Correcto</span>' : '<span class="bad">❌ Revisa: es '+(c.r==="T"?"tradicional":"Machine Learning")+'</span>') : '<span class="bad">Elige una opción</span>';
+  });
+  $("sim1score").textContent = "Aciertos: " + ok + " de " + S1.length;
+};
+$("sim1reset").onclick = renderS1;
+
+/* ---------- S2: ordenar CRISP-DM ---------- */
+var FASES = ["Comprensión del negocio","Comprensión de los datos","Preparación de los datos","Modelado","Evaluación","Despliegue"];
+var s2order = [];
+function renderS2(){
+  var mezcla = FASES.slice().sort(function(){ return Math.random() - 0.5; });
+  var h = "";
+  mezcla.forEach(function(f){ h += '<button data-fase="'+esc(f)+'">'+esc(f)+'</button>'; });
+  $("sim2pool").innerHTML = h;
+  s2order = [];
+  paintS2();
+}
+function paintS2(){
+  var h = "";
+  s2order.forEach(function(f,i){ h += '<span class="ph">'+(i+1)+'. '+esc(f)+'</span>'; });
+  $("sim2ans").innerHTML = h || '<span style="color:var(--mut)">Aquí aparecerá tu orden…</span>';
+  $("sim2msg").textContent = s2order.length ? "Llevas " + s2order.length + " de 6." : "Ordena las seis fases de la primera a la última.";
+}
+document.addEventListener("click", function(e){
+  var f = e.target.getAttribute && e.target.getAttribute("data-fase");
+  if(f && s2order.length < 6 && s2order.indexOf(f) < 0){
+    s2order.push(f);
+    e.target.disabled = true;
+    paintS2();
+  }
+});
+$("sim2undo").onclick = function(){
+  if(!s2order.length) return;
+  var last = s2order.pop();
+  document.querySelectorAll("[data-fase]").forEach(function(b){ if(b.getAttribute("data-fase")===last) b.disabled = false; });
+  paintS2();
+};
+$("sim2check").onclick = function(){
+  if(s2order.length < 6){ $("sim2msg").textContent = "Coloca las seis fases antes de comprobar."; return; }
+  var ok = s2order.every(function(f,i){ return f === FASES[i]; });
+  $("sim2msg").innerHTML = ok ? '<span class="ok">✅ Orden correcto: así se recorre un proyecto de datos.</span>' : '<span class="bad">❌ Hay fases fuera de lugar. Recuerda: primero entiendes el problema y los datos, luego modelas y evalúas.</span>';
+};
+$("sim2reset").onclick = renderS2;
+
+/* ---------- S3: entorno ---------- */
+$("sim3check").onclick = function(){
+  var a = document.querySelector('input[name="s3a"]:checked'), b = document.querySelector('input[name="s3b"]:checked');
+  if(!a || !b){ $("sim3msg").innerHTML = '<span class="bad">Responde las dos preguntas.</span>'; return; }
+  var okA = a.value === "1", okB = b.value === "0";
+  $("sim3msg").innerHTML = (okA ? '<span class="ok">✅ 1: Colab, porque corre en la nube y da acceso a GPUs.</span><br>' : '<span class="bad">❌ 1: Colab es la opción, porque no requiere instalación.</span><br>') +
+    (okB ? '<span class="ok">✅ 2: Jupyter local, porque los archivos quedan en tu disco.</span>' : '<span class="bad">❌ 2: Jupyter local guarda los archivos en tu computadora.</span>');
+};
+
+/* ---------- S4: pirámide ---------- */
+var S4 = [
+  {f:"El número 15", r:0},
+  {f:"En el curso 3A hay 2 estudiantes", r:1},
+  {f:"Como el grupo 3B subió su promedio después del repaso, conviene repetirlo en los demás grupos.", r:2},
+  {f:"Ana sacó 9 en Historia", r:1},
+  {f:"Las notas de la sección mejoraron de 6,5 a 8 después del repaso", r:2},
+  {f:"La temperatura del salón: 24", r:0}
+];
+var NIV = ["Dato","Información","Conocimiento"];
+function renderS4(){
+  var h = "";
+  S4.forEach(function(c,i){
+    h += '<div class="card"><p class="frase">'+esc(c.f)+'</p><select data-s4="'+i+'" aria-label="Nivel"><option value="">Elige…</option><option value="0">Dato</option><option value="1">Información</option><option value="2">Conocimiento</option></select><div class="res" id="s4r'+i+'"></div></div>';
+  });
+  $("sim4").innerHTML = h;
+  $("sim4score").textContent = "";
+}
+renderS4();
+$("sim4check").onclick = function(){
+  var ok = 0;
+  S4.forEach(function(c,i){
+    var sel = document.querySelector('[data-s4="'+i+'"]').value;
+    var good = sel !== "" && parseInt(sel,10) === c.r; if(good) ok++;
+    $("s4r"+i).innerHTML = sel === "" ? '<span class="bad">Elige un nivel</span>' : (good ? '<span class="ok">✅ '+NIV[c.r]+'</span>' : '<span class="bad">❌ Es '+NIV[c.r]+'</span>');
+  });
+  $("sim4score").textContent = "Aciertos: " + ok + " de " + S4.length;
+};
+
+/* ---------- S5: tabla interactiva ---------- */
+function renderTable(T, cls, roleFn){
+  var h = '<table class="df '+cls+'"><thead><tr><th class="idx" data-role="indice">índice</th>';
+  T.cols.forEach(function(c,j){ h += '<th class="colh" data-role="columna" data-col="'+j+'">'+esc(c)+'</th>'; });
+  h += '</tr></thead><tbody>';
+  T.rows.forEach(function(r,i){
+    h += '<tr><th class="idx" data-role="fila" data-row="'+i+'">'+i+'</th>';
+    r.forEach(function(v,j){ h += '<td class="cell" data-role="valor" data-row="'+i+'" data-col="'+j+'">'+esc(v)+'</td>'; });
+    h += '</tr>';
+  });
+  return h + '</tbody></table>';
+}
+$("sim5table").innerHTML = renderTable(EST, "", null);
+var ROLE_MSG = {
+  indice: "Índice: identifica cada fila. Pandas lo crea automáticamente; no es una columna de los datos originales.",
+  columna: "Columna: una variable o característica. Aquí, todos los valores de «{c}» describen algo distinto de cada estudiante.",
+  fila: "Fila: una observación o registro. Esta fila corresponde a un estudiante: {n}.",
+  valor: "Valor: un dato concreto. «{v}» es el valor de «{c}» para {n}."
+};
+document.addEventListener("click", function(e){
+  var t = e.target.closest && e.target.closest("#sim5table [data-role]");
+  if(!t) return;
+  var role = t.getAttribute("data-role"), msg = ROLE_MSG[role] || "";
+  var row = t.getAttribute("data-row"), col = t.getAttribute("data-col");
+  var n = row !== null ? EST.rows[parseInt(row,10)][0] : "";
+  var c = col !== null ? EST.cols[parseInt(col,10)] : "";
+  var v = (row !== null && col !== null) ? EST.rows[parseInt(row,10)][parseInt(col,10)] : "";
+  msg = msg.replace("{c}", c).replace("{n}", n).replace("{v}", v);
+  if(role === "fila" && row !== null) msg = "Fila: una observación o registro. Esta fila corresponde a " + n + ".";
+  if(role === "valor") msg = "Valor: un dato concreto. «" + v + "» es el valor de «" + c + "» para " + n + ".";
+  $("sim5msg").textContent = msg;
+});
+
+/* ---------- S6: crear DataFrame ---------- */
+var S6_DEFAULT = "nombre: Ana, Bruno, Carla\nnota: 8, 6, 9";
+function parseTabla(txt){
+  var lines = txt.split("\n").map(function(l){ return l.trim(); }).filter(function(l){ return l.length; });
+  var cols = [], vals = [];
+  for(var i=0;i<lines.length;i++){
+    var k = lines[i].indexOf(":");
+    if(k < 0) throw new Error("La línea «"+lines[i]+"» necesita dos puntos: nombre de columna: valores.");
+    var name = lines[i].slice(0,k).trim();
+    if(!name) throw new Error("Falta el nombre de la columna en «"+lines[i]+"».");
+    var items = lines[i].slice(k+1).split(",").map(function(x){ return x.trim(); }).filter(function(x){ return x.length; });
+    cols.push(name); vals.push(items);
+  }
+  if(!cols.length) throw new Error("Escribe al menos una columna.");
+  var n = vals[0].length;
+  for(var j=0;j<vals.length;j++){
+    if(vals[j].length !== n) throw new Error("La columna «"+cols[j]+"» tiene "+vals[j].length+" valor(es) y la primera tiene "+n+". Todas las columnas deben tener la misma cantidad de valores, porque cada posición es una fila.");
+  }
+  var rows = [];
+  for(var r=0;r<n;r++){ var fila = []; for(var c=0;c<cols.length;c++){ fila.push(vals[c][r]); } rows.push(fila); }
+  return {cols:cols, rows:rows};
+}
+$("sim6go").onclick = function(){
+  try{
+    var T = parseTabla($("sim6in").value);
+    $("sim6msg").innerHTML = '<span class="ok">✅ Se formó el DataFrame con '+T.rows.length+' filas y '+T.cols.length+' columnas.</span>';
+    $("sim6out").innerHTML = renderTable(T, "", null);
+  }catch(err){
+    $("sim6msg").innerHTML = '<span class="bad">❌ '+esc(err.message)+'</span>';
+    $("sim6out").innerHTML = "";
+  }
+};
+$("sim6reset").onclick = function(){ $("sim6in").value = S6_DEFAULT; $("sim6go").click(); };
+$("sim6reset").click();
+
+/* ---------- S7: tipos de variables ---------- */
+var TIPOS = ["Numérica discreta","Numérica continua","Categórica","Ordinal","Temporal","Texto"];
+var S7 = [
+  {c:"producto", r:"Texto", p:"Su plan de clase lo ubica como texto (nombre de un producto)."},
+  {c:"categoria", r:"Categórica", p:"Agrupa productos en pocas clases: «Libreria» o «Accesorios»."},
+  {c:"precio", r:"Numérica continua", p:"Es una medida con decimales posibles, como el precio."},
+  {c:"cantidad_vendida", r:"Numérica discreta", p:"Se cuenta: unidades enteras vendidas."},
+  {c:"sucursal", r:"Categórica", p:"Es una etiqueta (Centro, Norte, Sur) sin orden."},
+  {c:"fecha", r:"Temporal", p:"Representa un momento en el tiempo."}
+];
+function renderS7(){
+  var h = "";
+  S7.forEach(function(c,i){
+    h += '<div class="card"><p class="frase"><b>'+esc(c.c)+'</b></p><select data-s7="'+i+'" aria-label="Tipo de '+esc(c.c)+'"><option value="">Elige…</option>';
+    TIPOS.forEach(function(t){ h += '<option value="'+esc(t)+'">'+esc(t)+'</option>'; });
+    h += '</select><div class="res" id="s7r'+i+'"></div></div>';
+  });
+  $("sim7").innerHTML = h;
+  $("sim7score").textContent = "";
+}
+renderS7();
+$("sim7check").onclick = function(){
+  var ok = 0;
+  S7.forEach(function(c,i){
+    var sel = document.querySelector('[data-s7="'+i+'"]').value;
+    var good = sel === c.r; if(good) ok++;
+    $("s7r"+i).innerHTML = sel === "" ? '<span class="bad">Elige un tipo</span>' : (good ? '<span class="ok">✅ '+esc(c.p)+'</span>' : '<span class="bad">❌ Es '+esc(c.r)+'. '+esc(c.p)+'</span>');
+  });
+  $("sim7score").textContent = "Aciertos: " + ok + " de " + S7.length;
+};
+
+/* ---------- S8: consola ---------- */
+var SALIDAS = {
+  "head()": "     producto   categoria  precio  cantidad_vendida sucursal       fecha\n0    Cuaderno    Libreria    1200                15   Centro  2024-03-01\n1    Lapicera    Libreria     350                40   Centro  2024-03-01\n2     Mochila  Accesorios    8500                 5    Norte  2024-03-02\n3       Regla    Libreria     500                25      Sur  2024-03-02\n4  Cartuchera  Accesorios    3200                 8    Norte  2024-03-03",
+  "tail(3)": "  producto categoria  precio  cantidad_vendida sucursal       fecha\n7  Carpeta  Libreria     950                18    Norte  2024-03-04\n8     Goma  Libreria     300                30      Sur  2024-03-05\n9    Lapiz  Libreria     250                50   Centro  2024-03-05",
+  "shape": "(10, 6)   ← 10 filas y 6 columnas",
+  "columns": "['producto', 'categoria', 'precio', 'cantidad_vendida', 'sucursal', 'fecha']",
+  "dtypes": "producto              str\ncategoria             str\nprecio              int64\ncantidad_vendida    int64\nsucursal              str\nfecha                 str",
+  "info()": "<class 'pandas.core.frame.DataFrame'>\nRangeIndex: 10 entries, 0 to 9\nData columns (total 6 columns):\n #   Column            Non-Null Count  Dtype\n---  ------            --------------  -----\n 0   producto          10 non-null     str\n 1   categoria         10 non-null     str\n 2   precio            10 non-null     int64\n 3   cantidad_vendida  10 non-null     int64\n 4   sucursal          10 non-null     str\n 5   fecha             10 non-null     str\ndtypes: int64(2), str(4)\nmemory usage: 612.0+ bytes",
+  "describe()": "        precio  cantidad_vendida\ncount    10.00             10.00\nmean   1830.00             21.30\nstd    2509.34             14.80\nmin     250.00              5.00\n25%     387.50             10.50\n50%    1075.00             16.50\n75%    1662.50             28.75\nmax    8500.00             50.00",
+  "value_counts('sucursal')": "sucursal\nCentro    4\nNorte     3\nSur       3\nName: count, dtype: int64"
+};
+(function(){
+  var h = "";
+  Object.keys(SALIDAS).forEach(function(k){ h += '<button data-cmd="'+esc(k)+'">'+esc(k)+'</button>'; });
+  $("sim8btns").innerHTML = h;
+})();
+document.addEventListener("click", function(e){
+  var k = e.target.getAttribute && e.target.getAttribute("data-cmd");
+  if(k !== null && k !== undefined && k !== ""){
+    $("sim8out").textContent = "In [ ]: df." + k + "\n\n" + SALIDAS[k];
+  }
+});
+$("sim8check").onclick = function(){
+  var a = document.querySelector('[data-q="a"]').value, b = document.querySelector('[data-q="b"]').value;
+  if(!a || !b){ $("sim8msg").innerHTML = '<span class="bad">Elige una herramienta en cada pregunta.</span>'; return; }
+  var okA = a === "shape", okB = b === "dtypes";
+  $("sim8msg").innerHTML = (okA ? '<span class="ok">✅ a) shape: (filas, columnas).</span><br>' : '<span class="bad">❌ a) Es shape, sin paréntesis.</span><br>') +
+    (okB ? '<span class="ok">✅ b) dtypes muestra el tipo de cada columna; aquí fecha aparece como str (texto).</span>' : '<span class="bad">❌ b) Es dtypes: muestra si la columna es texto o fecha.</span>');
+};
+
+/* ---------- S9: muestra vs interpretación ---------- */
+var S9 = [
+  {f:"En el dataset de 5 estudiantes, quien estudió 6 horas tiene nota 9.", r:"M", p:"Es lo que muestra la tabla: un hecho observado en estos datos."},
+  {f:"Estudiar más horas causa mejores notas.", r:"C", p:"Los datos no demuestran causa: hay otros factores que no están en la tabla."},
+  {f:"En este pequeño dataset, quienes estudiaron más horas parecen tener notas más altas.", r:"P", p:"Es una interpretación prudente: describe la tendencia sin afirmar causa."},
+  {f:"El dataset completo representa a todos los estudiantes del plantel.", r:"C", p:"Son solo cinco registros; no sabemos cómo se eligieron ni si representan al plantel."}
+];
+var NIV9 = {M:"Lo que muestran los datos", P:"Interpretación prudente", C:"Conclusión que no conviene sacar"};
+function renderS9(){
+  var h = "";
+  S9.forEach(function(c,i){
+    h += '<div class="card"><p class="frase">'+esc(c.f)+'</p><select data-s9="'+i+'" aria-label="Clasificación"><option value="">Elige…</option><option value="M">Lo que muestran los datos</option><option value="P">Interpretación prudente</option><option value="C">Conclusión que no conviene sacar</option></select><div class="res" id="s9r'+i+'"></div></div>';
+  });
+  $("sim9").innerHTML = h;
+  $("sim9score").textContent = "";
+}
+renderS9();
+$("sim9check").onclick = function(){
+  var ok = 0;
+  S9.forEach(function(c,i){
+    var sel = document.querySelector('[data-s9="'+i+'"]').value;
+    var good = sel === c.r; if(good) ok++;
+    $("s9r"+i).innerHTML = sel === "" ? '<span class="bad">Elige una opción</span>' : (good ? '<span class="ok">✅ '+esc(c.p)+'</span>' : '<span class="bad">❌ Es: '+NIV9[c.r]+'. '+esc(c.p)+'</span>');
+  });
+  $("sim9score").textContent = "Aciertos: " + ok + " de " + S9.length;
+};
+
+/* ---------- S10: laboratorio de cadenas ---------- */
+document.querySelectorAll("[data-op]").forEach(function(b){
+  b.addEventListener("click", function(){
+    var t = $("sim10in").value, op = b.getAttribute("data-op"), out;
+    if(op === "strip") out = JSON.stringify(t.trim());
+    else if(op === "lower") out = JSON.stringify(t.toLowerCase());
+    else if(op === "split") out = JSON.stringify(t.split(" "));
+    else if(op === "replace") out = JSON.stringify(t.replace("Python","Pandas"));
+    else out = JSON.stringify(t.slice(0,8));
+    $("sim10out").textContent = out;
+  });
+});
+
+/* ---------- S11: probador de regex ---------- */
+document.querySelectorAll("[data-pat]").forEach(function(b){
+  b.addEventListener("click", function(){ $("sim11pat").value = b.getAttribute("data-pat"); $("sim11go").click(); });
+});
+$("sim11go").onclick = function(){
+  var txt = $("sim11text").value, pat = $("sim11pat").value;
+  try{
+    var re = new RegExp(pat, "g"), m, found = [];
+    while((m = re.exec(txt)) !== null){ found.push(m[0]); if(m[0] === "") re.lastIndex++; }
+    $("sim11out").innerHTML = found.length
+      ? "Coincidencias (" + found.length + "): " + found.map(function(x){ return "<code>"+esc(x)+"</code>"; }).join(" ")
+      : "Sin coincidencias. Revisa el patrón.";
+  }catch(err){
+    $("sim11out").innerHTML = '<span class="bad">El patrón tiene un error: '+esc(err.message)+'</span>';
+  }
+};
+$("sim11go").click();
+
+/* ---------- S12: reseñas ---------- */
+(function(){
+  var h = '<thead><tr><th>usuario_id</th><th>sucursal</th><th>fecha</th><th>comentario</th></tr></thead><tbody>';
+  RESE.forEach(function(r){ h += '<tr><td>'+r[0]+'</td><td>'+esc(r[1])+'</td><td>'+esc(r[2])+'</td><td style="text-align:left">'+esc(r[3])+'</td></tr>'; });
+  $("reseTable").innerHTML = h + '</tbody>';
+})();
+function limpiar(t){ return t.toLowerCase().replace(/[^\w\sáéíóúñü]/g,"").trim(); }
+function clasificar(t){
+  var l = limpiar(t);
+  for(var i=0;i<POS.length;i++){ if(l.indexOf(POS[i]) >= 0) return {res:"Positivo", por:POS[i]}; }
+  for(var j=0;j<NEG.length;j++){ if(l.indexOf(NEG[j]) >= 0) return {res:"Negativo", por:NEG[j]}; }
+  return {res:"Neutro", por:null};
+}
+function renderS12(){
+  var h = "";
+  RESE.forEach(function(r,i){
+    h += '<div class="card"><p class="frase">'+esc(r[3])+'</p><div class="res" id="s12r'+i+'" style="font-weight:600">Sin clasificar</div></div>';
+  });
+  $("sim12").innerHTML = h;
+}
+renderS12();
+$("sim12run").onclick = function(){
+  RESE.forEach(function(r,i){
+    var c = clasificar(r[3]);
+    var txt = "Resultado: " + c.res + (c.por ? " (encontró «" + c.por + "»)" : " (no encontró palabras de la lista)");
+    $("s12r"+i).innerHTML = esc(txt);
+  });
+  $("sim12msg").innerHTML = 'Compara cada resultado con tu lectura. Observa la reseña 3: contiene una palabra positiva y una negativa. La regla decide por orden, no por el sentido completo.';
+};
+
+/* ---------- MODO ENFOQUE ---------- */
+var focusLeft = 25*60, focusTimer = null;
+function paintFocus(){
+  var m = Math.floor(focusLeft/60), s = focusLeft % 60;
+  $("focusTime").textContent = (m<10?"0":"")+m+":"+(s<10?"0":"")+s;
+}
+$("focusBtn").onclick = function(){
+  if(focusTimer){ clearInterval(focusTimer); focusTimer = null; this.textContent = "Continuar"; return; }
+  this.textContent = "Pausar";
+  focusTimer = setInterval(function(){
+    focusLeft--; paintFocus();
+    if(focusLeft <= 0){ clearInterval(focusTimer); focusTimer = null; focusLeft = 5*60; paintFocus(); $("focusBtn").textContent = "Pausa de 5 min"; }
+  }, 1000);
+};
+$("focusReset").onclick = function(){ clearInterval(focusTimer); focusTimer = null; focusLeft = 25*60; paintFocus(); $("focusBtn").textContent = "Iniciar 25 min"; };
+paintFocus();
+
+/* ---------- ARRANQUE ---------- */
+ids().forEach(function(id){ if(id.indexOf("s") === 0 && QUIZ[id]) renderQuiz(id); });
+renderS1(); renderS2();
+buildNav();
+window.addEventListener("hashchange", updateNav);
+if(!location.hash){ try{ history.replaceState(null, "", "#inicio"); }catch(e){ location.hash = "inicio"; } }
+show();
+</script>
+</body>
+</html>
